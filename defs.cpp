@@ -1,0 +1,19 @@
+#include "includes.h"
+
+const char* WINDOW_TITLE = "Tank 1975";
+const char* TANK_SPRITE_FILE = "tankchuyendong.png";
+const int TANK_CLIPS[][4] = {
+    {0, 0, 32, 32},
+    {32, 0, 32, 32},
+    {64, 0, 32, 32},
+    {96, 0, 32, 32},
+    {128, 0, 32, 32},
+    {160, 0 , 32, 32},
+    {192, 0, 32, 32},
+    {224, 0, 32, 32}};
+const int TANK_FRAMES = sizeof(TANK_CLIPS)/sizeof(TANK_CLIPS[0]);
+
+const int MAP_HEIGHT = 1216;
+const int MAP_WIDTH = 800;
+
+SDL_Rect camera = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
