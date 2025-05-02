@@ -1,6 +1,5 @@
 #include "includes.h"
 
-
 Tank::Tank() : x(384), y(1184), dx(0), dy(0), speed(INITIAL_SPEED), direction(NORTH) {
 
 camera.y = y - SCREEN_HEIGHT / 2 + 16;
@@ -28,7 +27,7 @@ void Tank::move(){
     nextY = max(0,min(nextY, MAP_HEIGHT - 32));
 
 
-    if(!checkvatram(nextX, nextY)){
+    if(!checkvacham(nextX, nextY) && !checkvacham_tankOther(nextX, nextY)){
         x = nextX; y = nextY;
 
         if(y > camera.y + camera.h - 32 && direction == SOUTH && camera.y + camera.h < MAP_HEIGHT ){
@@ -76,8 +75,6 @@ void Tank::updateVelocity(Direction dir) {
 
 
 void Bullet::fire(int sx, int sy, Direction dir, SDL_Texture* texV, SDL_Texture* texH){
-    //if(active) return;
-
     direction = dir;
     speed = 13;
     active = true;
@@ -156,6 +153,7 @@ void loadTileTextures(Graphics& pic){
     tileTextures[FOREST] = pic.loadTexture("forest.png");
     tileTextures[BRIDGE] = pic.loadTexture("bridge.png");
     tileTextures[WATER] = pic.loadTexture("water.png");
+    tileTextures[GRASS] = pic.loadTexture("grass.png");
 }
 
 void renderTileMap(Graphics& pic, bool onlyforest){
@@ -188,10 +186,10 @@ void renderTileMap(Graphics& pic, bool onlyforest){
 }
 
 bool isPassTile(int tileType){
-    return tileType == EMPTY || tileType == FOREST || tileType == BRIDGE;
+    return tileType == EMPTY || tileType == FOREST || tileType == BRIDGE || tileType == GRASS;
 }
 
-bool checkvatram(int nextX, int nextY){
+bool checkvacham(int nextX, int nextY){
     SDL_Rect tankf = {nextX, nextY, 32, 32};
 
     for(int row= 0; row < MAP_ROWS; row++){
@@ -199,9 +197,22 @@ bool checkvatram(int nextX, int nextY){
             int tileType = tileMap[row][col];
             if(isPassTile(tileType)) continue;
 
+            if (tileType == BRICK) {
+                SDL_Rect test = brickClipMap[row][col];
+
+                SDL_Rect tileBox = {col * TILE_SIZE + test.x, row * TILE_SIZE + test.y, test.w, test.h};
+
+                if(SDL_HasIntersection(&tankf, &tileBox)){
+                return true;
+                }
+
+                continue;
+            }
+
+
             SDL_Rect tileBox = {col*TILE_SIZE, row*TILE_SIZE, TILE_SIZE, TILE_SIZE};
 
-            if(SDL_HasIntersection(&tankf, &tileBox)){
+            if (SDL_HasIntersection(&tankf, &tileBox)) {
                 return true;
             }
 
@@ -211,43 +222,199 @@ bool checkvatram(int nextX, int nextY){
     return false;
 }
 
+const int BULLET_WIDTH = 32;
+const int BULLET_HEIGHT = 32;
+
 void BulletTile(Bullet& bullet){
-    if(!bullet.active) return;
+    if (!bullet.active) return;
 
-    int col = bullet.x / TILE_SIZE;
-    int row = bullet.y / TILE_SIZE;
 
+    int centerX = bullet.x + BULLET_WIDTH / 2;
+    int centerY = bullet.y + BULLET_HEIGHT / 2;
+
+    int col = centerX / TILE_SIZE;
+    int row = centerY / TILE_SIZE;
     if (row < 0 || row >= MAP_ROWS || col < 0 || col >= MAP_COLS) return;
-
     int tileType = tileMap[row][col];
 
     if (tileType == EMPTY || tileType == FOREST || tileType == BRIDGE) return;
-
     if (tileType == STEEL) {
         bullet.reset();
         return;
     }
-
-    if(tileType == BRICK){
+    if (tileType == BRICK) {
         SDL_Rect& shot = brickClipMap[row][col];
-
         switch (bullet.direction) {
             case SOUTH: shot.y += 8; shot.h -= 8; break;
             case NORTH: shot.h -= 8; break;
             case EAST:  shot.x += 8; shot.w -= 8; break;
             case WEST :  shot.w -= 8; break;
         }
+        if (shot.w <= 0 || shot.h <= 0) {
+            tileMap[row][col] = EMPTY;
+        }
+        bullet.reset();
+    }
+}
 
 
-    if(shot.w <= 0 || shot.h <= 0){
-        tileMap[row][col] = EMPTY;
+EnemyTank enemy[enemyMax];
+const int MaxEnemy_bullet = 20;
+Bullet enemyBullets[MaxEnemy_bullet];
+
+
+void idivEnemy(int index, int x, int y){
+    enemy[index].x = x;
+    enemy[index].y = y;
+    enemy[index].dx = 0;
+    enemy[index].dy = 0;
+    enemy[index].speed = 4;
+    enemy[index].direction = SOUTH;
+    enemy[index].alive = true;
+    enemy[index].frameCounter = 0;
+    enemy[index].sprite = {};
+    enemy[index].sprite.setFramerange(2, 3);
+    enemy[index].dx = 0;
+    enemy[index].dy = enemy[index].speed;
+    enemy[index].bulletIndex = index;
+}
+
+void updateEnemy(){
+    for (int i = 0; i < enemyMax; ++i) {
+        if (!enemy[i].alive) continue;
+
+        EnemyTank& E = enemy[i];
+        E.frameCounter++;
+        E.sprite.tick();
+
+        int nextX = E.x + E.dx;
+        int nextY = E.y + E.dy;
+
+        bool vacham = checkvacham(nextX, nextY);
+        bool vung = (nextX < 0 || nextX + 32 > MAP_WIDTH || nextY < 0 || nextY + 32 > MAP_HEIGHT);
+        bool checkCollision = checkvacham_enemyOther(i, nextX, nextY);
+        if (vacham || vung || checkCollision) {
+            int dirs[4] = {NORTH, SOUTH,EAST , WEST};
+            for(int i = 3; i > 0; i--){
+                int r = rand() % (i+1);
+                swap(dirs[i], dirs[r]);
+            }
+
+            for (int tries = 0; tries < 4; tries++) {
+                Direction newDir = (Direction)dirs[tries];
+                int testDx = 0, testDy = 0;
+                switch (newDir) {
+                    case NORTH: testDy = -E.speed; break;
+                    case SOUTH: testDy = E.speed; break;
+                    case EAST:  testDx = E.speed; break;
+                    case WEST:  testDx = -E.speed; break;
+                }
+
+                int testX = E.x + testDx;
+                int testY = E.y + testDy;
+                bool testVacham = checkvacham(testX, testY);
+                bool testVung = (testX < 0 || testX + 32 > MAP_WIDTH || testY < 0 || testY + 32 > MAP_HEIGHT);
+
+                if (!testVacham && !testVung) {
+                    E.direction = newDir;
+                    E.dx = testDx;
+                    E.dy = testDy;
+                    switch (newDir) {
+                        case NORTH: E.sprite.setFramerange(0, 1); break;
+                        case SOUTH: E.sprite.setFramerange(2, 3); break;
+                        case WEST:  E.sprite.setFramerange(4, 5); break;
+                        case EAST:  E.sprite.setFramerange(6, 7); break;
+                    }
+                    break;
+                }
+            }
+            continue;
+        }
+        E.x = nextX;
+        E.y = nextY;
+
+
+        Bullet& shot = enemyBullets[E.bulletIndex];
+        if (!shot.active) {
+            int fireDx = 0, fireDy = 0;
+            SDL_Texture* usedTexture = bulletTexture;
+
+            switch (E.direction) {
+                 case NORTH: fireDx = 0; fireDy = -13; usedTexture = bulletTexture; break;
+                 case SOUTH: fireDx = 0; fireDy = 13; usedTexture = bulletTexture; break;
+                 case EAST:  fireDx = 13; fireDy = 0; usedTexture = bulletTexture1; break;
+                 case WEST:  fireDx = -13; fireDy = 0; usedTexture = bulletTexture1; break;
+            }
+
+            shot.x = E.x;
+            shot.y = E.y;
+            shot.dx = fireDx;
+            shot.dy = fireDy;
+            shot.speed = 13;
+            shot.active = true;
+            shot.texture = usedTexture;
+        }
     }
 
-    bullet.reset();
 
-    }
+
 
 }
+
+void renderEnemy(Graphics& gfx){
+    for(int i = 0; i < enemyMax; i++){
+        if(enemy[i].alive) gfx.renderSpriteCamera(enemy[i].x, enemy[i].y, enemy[i].sprite);
+
+    }
+}
+
+void updateBullets(Bullet bullets[], int maxBullets) {
+    for (int i = 0; i < maxBullets; i++) {
+        if (!bullets[i].active) continue;
+        bullets[i].move();
+        BulletTile(bullets[i]);
+    }
+}
+
+void renderBullets(Bullet bullets[], int maxBullets, Graphics& gfx) {
+    for (int i = 0; i < maxBullets; i++) {
+        if (bullets[i].active) {
+            bullets[i].render(gfx);
+        }
+    }
+}
+
+bool checkvacham_tank(const SDL_Rect& a, const SDL_Rect& b){
+    return SDL_HasIntersection(&a, &b);
+}
+
+Tank player;
+bool checkvacham_enemyOther(int id, int nextX, int nextY) {
+    SDL_Rect rectA = {nextX, nextY, 32, 32};
+    for (int i = 0; i < enemyMax; i++) {
+        if (i == id || !enemy[i].alive) continue;
+        SDL_Rect rectB = {enemy[i].x, enemy[i].y, 32, 32};
+        if (checkvacham_tank(rectA, rectB)) return true;
+    }
+    SDL_Rect playerBox = {player.x, player.y, 32, 32};
+    if (checkvacham_tank(rectA, playerBox)) return true;
+
+    return false;
+}
+
+
+bool checkvacham_tankOther(int nextX, int nextY){
+    SDL_Rect rectA = {nextX, nextY, 32, 32};
+
+    for (int i = 0; i < enemyMax; ++i) {
+        if (!enemy[i].alive) continue;
+        SDL_Rect rectB = {enemy[i].x, enemy[i].y, 32, 32};
+        if (checkvacham_tank(rectA, rectB)) return true;
+    }
+
+    return false;
+}
+
 
 
 
