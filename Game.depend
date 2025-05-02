@@ -1,0 +1,48 @@
+# depslib dependency file v1.0
+1740167666 source:c:\users\admin\documents\code blocks\demosdl\main.cpp
+	<iostream>
+	<SDL.h>
+	<SDL_image.h>
+
+1746200738 source:c:\users\admin\documents\code blocks\game\main.cpp
+	"includes.h"
+	<direct.h>
+
+1745943085 c:\users\admin\documents\code blocks\game\defs.h
+
+1744561041 c:\users\admin\documents\code blocks\game\graphics.h
+	"includes.h"
+
+1744561041 source:c:\users\admin\documents\code blocks\game\graphics.cpp
+	"includes.h"
+
+1745682348 source:c:\users\admin\documents\code blocks\game\defs.cpp
+	"includes.h"
+
+1744999284 source:c:\users\admin\documents\code blocks\game\events.cpp
+	"includes.h"
+
+1744471480 c:\users\admin\documents\code blocks\game\events.h
+	"includes.h"
+
+1746197387 c:\users\admin\documents\code blocks\game\includes.h
+	<iostream>
+	<vector>
+	<string>
+	<stdlib.h>
+	<time.h>
+	<SDL.h>
+	<SDL_image.h>
+	<windows.h>
+	<fstream>
+	"defs.h"
+	"graphics.h"
+	"events.h"
+	"game.h"
+
+1746200738 c:\users\admin\documents\code blocks\game\game.h
+	"includes.h"
+
+1746200738 source:c:\users\admin\documents\code blocks\game\game.cpp
+	"includes.h"
+

@@ -42,6 +42,7 @@ enum TileType{
     FOREST = 3,
     BRIDGE = 4,
     WATER = 5,
+    GRASS = 6
 };
 
 
@@ -58,9 +59,36 @@ bool loadTileMap(const char* filename);
 void loadTileTextures(Graphics& path);
 void renderTileMap(Graphics& path, bool onlyforest);
 bool isPassTile(int tileType);
-bool checkvatram(int nextX, int nextY);
+bool checkvacham(int nextX, int nextY);
 int snapToGrid(int value, int tileSize, int differ);
 void BulletTile(Bullet& bullet);
+
+struct EnemyTank {
+    int x, y;
+    int dx, dy;
+    int speed;
+    Sprite sprite;
+    Direction direction;
+    bool alive;
+    int frameCounter;
+
+    int bulletIndex;
+};
+extern Tank player;
+const int enemyMax = 12;
+extern EnemyTank enemy[enemyMax];
+extern Bullet enemyBullets[];
+extern const int MaxEnemy_bullet;
+void idivEnemy(int index, int x, int y);
+void updateEnemy();
+void renderEnemy(Graphics& gfx);
+void updateBullets(Bullet bullets[], int maxBullets);
+void renderBullets(Bullet bullets[], int maxBullets, Graphics& gfx);
+bool checkvacham_tank(const SDL_Rect& a, const SDL_Rect& b);
+bool checkvacham_enemyOther(int id, int nextX, int nextY);
+bool checkvacham_tankOther(int nextX, int nextY);
+
+
 
 
 
