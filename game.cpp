@@ -115,7 +115,7 @@ void Bullet::move(){
 }
 
 void Bullet::render(Graphics& gfx) {
-    if (active && texture) {
+    if (active && texture && x < 800 - 16) {
         gfx.renderTextureCamera(texture, x, y);
     }
 }
@@ -291,7 +291,8 @@ void updateEnemy(){
         int nextY = E.y + E.dy;
 
         bool vacham = checkvacham(nextX, nextY);
-        bool vung = (nextX < 0 || nextX + 32 > MAP_WIDTH || nextY < 0 || nextY + 32 > MAP_HEIGHT);
+        bool vung = (nextX < 0 || nextX + 32 > MAP_WIDTH || nextY < 0 || nextY + 32 > MAP_HEIGHT ||
+                     (i <= 5 && nextY > MAP_HEIGHT / 2) || (i >= 6 && nextY < MAP_HEIGHT /2));
         bool checkCollision = checkvacham_enemyOther(i, nextX, nextY);
         if (vacham || vung || checkCollision) {
             int dirs[4] = {NORTH, SOUTH,EAST , WEST};
@@ -313,7 +314,8 @@ void updateEnemy(){
                 int testX = E.x + testDx;
                 int testY = E.y + testDy;
                 bool testVacham = checkvacham(testX, testY);
-                bool testVung = (testX < 0 || testX + 32 > MAP_WIDTH || testY < 0 || testY + 32 > MAP_HEIGHT);
+                bool testVung = (testX < 0 || testX + 32 > MAP_WIDTH || testY < 0 || testY + 32 > MAP_HEIGHT ||
+                                 (i <= 5 && testY > MAP_HEIGHT / 2) || (i >= 6 && testY < MAP_HEIGHT / 2));
 
                 if (!testVacham && !testVung) {
                     E.direction = newDir;
@@ -363,7 +365,7 @@ void updateEnemy(){
 
 void renderEnemy(Graphics& gfx){
     for(int i = 0; i < enemyMax; i++){
-        if(enemy[i].alive) gfx.renderSpriteCamera(enemy[i].x, enemy[i].y, enemy[i].sprite);
+        if(enemy[i].alive && enemy[i].x < 800) gfx.renderSpriteCamera(enemy[i].x, enemy[i].y, enemy[i].sprite);
 
     }
 }
