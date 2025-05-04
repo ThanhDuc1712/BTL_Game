@@ -27,7 +27,8 @@ void Graphics::init(){
 void Graphics::prepareScene(SDL_Texture* background){
         SDL_Rect tang = camera;
         SDL_RenderClear(renderer); //XOA NEU CAN KHONG THI BO
-        SDL_RenderCopy(renderer, background, &tang, NULL);
+        SDL_Rect dest = {0, 0, 800, 608};
+        SDL_RenderCopy(renderer, background, &tang, &dest);
 }
 
 void Graphics::presentScene(){

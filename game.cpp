@@ -1,6 +1,6 @@
 #include "includes.h"
 
-Tank::Tank() : x(384), y(1184), dx(0), dy(0), speed(INITIAL_SPEED), direction(NORTH) {
+Tank::Tank() : x(384), y(1184), dx(0), dy(0), speed(INITIAL_SPEED), lives(3), immotank(false), immotankTimer(0), direction(NORTH){
 
 camera.y = y - SCREEN_HEIGHT / 2 + 16;
 camera.y = std::max(0, std::min(camera.y, MAP_HEIGHT - SCREEN_HEIGHT));
@@ -42,8 +42,14 @@ void Tank::move(){
         }else{
             sprite.currentFrame = sprite.startFrame;
         }
+
+        checkWaterCollision();
     }else{
         stop();
+    }
+    if(immotank){
+        immotankTimer--;
+        if(immotankTimer <= 0) immotank = false;
     }
 
 }
@@ -420,7 +426,108 @@ bool checkvacham_tankOther(int nextX, int nextY){
 
 
 
+
+
+
+void checkBulletEnemyCollision(Bullet& bullet) {
+    if (!bullet.active) return;
+
+    SDL_Rect bulletRect = {bullet.x, bullet.y, 32, 32};
+
+    for (int i = 0; i < enemyMax; i++) {
+        if (!enemy[i].alive) continue;
+
+        SDL_Rect enemyRect = {enemy[i].x, enemy[i].y, 32, 32};
+        if (SDL_HasIntersection(&bulletRect, &enemyRect)) {
+            enemy[i].alive = false;
+            bullet.reset();
+            break;
+        }
+    }
+}
+
+void checkEnemyBulletPlayerCollision() {
+    SDL_Rect playerRect = {player.x, player.y, 32, 32};
+
+    for (int i = 0; i < MaxEnemy_bullet; i++) {
+        if (!enemyBullets[i].active) continue;
+
+        SDL_Rect bulletRect = {enemyBullets[i].x, enemyBullets[i].y, 32, 32};
+        if (SDL_HasIntersection(&bulletRect, &playerRect)) {
+            handleTankHit();
+            enemyBullets[i].reset();
+            break;
+        }
+    }
+}
+
+void checkWaterCollision(){
+    if(player.immotank) return;
+    int tankX = player.x + 16;
+    int tankY = player.y + 16;
+    int col = tankX/TILE_SIZE;
+    int row = tankY/TILE_SIZE;
+    if(row >= 0 && row < MAP_ROWS && col >= 0 && col < MAP_COLS){
+        if(tileMap[row][col] == WATER){
+            handleTankHit();
+        }
+    }
+}
+
+void resetPlayerPosition() {
+    player.x = 384;
+    player.y = 1184;
+    player.dx = 0;
+    player.dy = 0;
+    player.setDirection(NORTH);
+    player.immotank = true;
+    player.immotankTimer = 120;
+    camera.y = player.y - SCREEN_HEIGHT / 2 + 16;
+    camera.y = std::max(0, std::min(camera.y, MAP_HEIGHT - SCREEN_HEIGHT));
+}
+
+
+
+LivesDisplay livesDisplay;
+void LivesDisplay::init(SDL_Texture* tex){
+    texture = tex;
+    sprite.texture = texture;
+
+    SDL_Rect clip;
+    for(int i = 0; i < LIVE_FRAMES; i++){
+        clip.x = LIVE_CLIPS[i][0];
+        clip.y = LIVE_CLIPS[i][1];
+        clip.w = LIVE_CLIPS[i][2];
+        clip.h = LIVE_CLIPS[i][3];
+        sprite.clips.push_back(clip);
+    }
+    sprite.currentFrame = 0;
+}
+
+void LivesDisplay::updateLives(int lives){
+    sprite.currentFrame = 3 - lives;
+    if(sprite.currentFrame < 0) sprite.currentFrame = 0;
+    if(sprite.currentFrame >= LIVE_FRAMES) sprite.currentFrame = LIVE_FRAMES - 1;
+}
+
+void LivesDisplay::render(Graphics& gfx){
+    gfx.render(SCREEN_WIDTH - 120, 10, sprite);
+}
+
+void handleTankHit(){
+    if (player.immotank) return;
+    player.lives--;
+    livesDisplay.updateLives(player.lives);
+
+    if (player.lives <= 0) {
+        currentState = GAME_OVER;
+    } else {
+        resetPlayerPosition();
+    }
+}
+
+
 bool gameOver(const Tank& player){
     // dieu kien cho xe dung sau nay
-    return false;
+    return player.lives <= 0;
 }

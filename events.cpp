@@ -44,27 +44,38 @@ void handleKeyEvents(Tank& player, Bullet& bullet, SDL_Texture* bulletTexture, S
 
     }
 }
-void handleMouseEvents(SDL_Event &event, Tank &player) {
+void handleMouseEvents(SDL_Event &event, int mouseX, int mouseY) {
     switch (event.type) {
         case SDL_MOUSEBUTTONDOWN:
             switch (event.button.button) {
                 case SDL_BUTTON_LEFT:
                     // Xử lý chọn menu
+                    if(currentState == MENU){
+                        if(gameMenu.handleClick(mouseX, mouseY)){
+                            currentState = PLAYING;
+                        }
+                    }
                     break;
                 case SDL_BUTTON_RIGHT:
                     // Xử lý tùy chỉnh âm lượng
                     break;
             }
             break;
+                case SDL_MOUSEMOTION:
+                    if(currentState == MENU){
+                        gameMenu.update(mouseX, mouseY);
+                    } break;
     }
 }
 
 void handleEvents(SDL_Event &event, bool &running, Tank &player, Bullet& bullet, SDL_Texture* bulletTexture, SDL_Texture* bulletTexture1) {
+    int mouseX = 0, mouseY = 0;
     while (SDL_PollEvent(&event)) {
         if (event.type == SDL_QUIT) {
             running = false;
         }
-        handleMouseEvents(event, player);
+        SDL_GetMouseState(&mouseX, &mouseY);
+        handleMouseEvents(event, mouseX, mouseY);
     }
     handleKeyEvents(player, bullet, bulletTexture, bulletTexture1);
 }

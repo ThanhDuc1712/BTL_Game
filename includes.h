@@ -14,6 +14,7 @@
 #include "graphics.h"
 #include "events.h"
 #include "game.h"
+#include "menu.h"
 
 using namespace std;
 

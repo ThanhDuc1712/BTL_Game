@@ -1,0 +1,34 @@
+#ifndef MENU_H
+#define MENU_H
+
+#include "includes.h"
+
+enum GameFunc {MENU, PLAYING, GAME_OVER};
+
+struct Button{
+    SDL_Rect rect;
+    SDL_Texture* texture;
+    bool isHovered;
+    bool isMouseOver(int mouseX, int mouseY) {
+        return (mouseX >= rect.x && mouseX <= rect.x + rect.w && mouseY >= rect.y && mouseY <= rect.y + rect.h);
+    }
+};
+
+struct Menu{
+    Button startButton;
+    SDL_Texture* backgroundTexture;
+    SDL_Texture* titleTexture;
+
+    void init(Graphics& gfx);
+    void render(Graphics& gfx);
+    void update(int mouseX, int mouseY);
+    bool handleClick(int mouseX, int mouseY);
+    void cleanup();
+};
+
+extern GameFunc currentState;
+extern Menu gameMenu;
+
+
+
+#endif // MENU_H

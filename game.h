@@ -7,6 +7,9 @@ struct Tank {
     int x,y;
     int dx, dy;
     int speed;
+    int lives;
+    bool immotank;
+    int immotankTimer;
     Sprite sprite;
     Direction direction;
     Tank();
@@ -90,6 +93,21 @@ bool checkvacham_tankOther(int nextX, int nextY);
 
 
 
+
+void checkBulletEnemyCollision(Bullet& bullet);
+void checkEnemyBulletPlayerCollision();
+void checkWaterCollision();
+void resetPlayerPosition();
+
+struct LivesDisplay {
+    SDL_Texture* texture;
+    Sprite sprite;
+    void init(SDL_Texture* tex);
+    void render(Graphics& gfx);
+    void updateLives(int lives);
+};
+extern LivesDisplay livesDisplay;
+void handleTankHit();
 
 
 bool gameOver(const Tank& player);
