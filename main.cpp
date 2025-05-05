@@ -19,6 +19,7 @@ int main(int argc, char* argv[]) {
     graphics.init();
 
     gameMenu.init(graphics);
+    GOverScreen.init(graphics);
     SDL_Texture* livesTexture = graphics.loadTexture(LIVE_SPRITE_FILE);
     SDL_Texture* background = graphics.loadTexture("hehe.png");
     SDL_Texture* tankTexture = graphics.loadTexture(TANK_SPRITE_FILE);
@@ -73,6 +74,7 @@ int main(int argc, char* argv[]) {
         }
         else if (currentState == GAME_OVER) {
             SDL_RenderClear(graphics.renderer);
+            GOverScreen.render(graphics);
         }
 
         graphics.presentScene();
@@ -80,6 +82,7 @@ int main(int argc, char* argv[]) {
     }
 
     gameMenu.cleanup();
+    GOverScreen.cleanup();
     graphics.quit();
     return 0;
 }

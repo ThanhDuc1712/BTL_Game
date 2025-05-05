@@ -527,6 +527,39 @@ void handleTankHit(){
 }
 
 
+void resetGame(){
+    player.lives = 3;
+    player.immotank = false;
+    player.immotankTimer = 0;
+    player.x = 384;
+    player.y = 1184;
+    player.dx = 0;
+    player.dy = 0;
+    player.setDirection(NORTH);
+
+    camera.y = player.y - SCREEN_HEIGHT / 2 + 16;
+    camera.y = std::max(0, std::min(camera.y, MAP_HEIGHT - SCREEN_HEIGHT));
+    livesDisplay.updateLives(player.lives);
+
+
+    for(int i = 0; i < MaxEnemy_bullet; i++){
+        enemyBullets[i].active = false;
+        enemyBullets[i].texture = nullptr;
+    }
+
+    loadTileMap("tilemap1.txt");
+
+    for(int i = 0; i < enemyMax; i++){
+        enemy[i].alive = true;
+        enemy[i].x = spawnPos[i][0];
+        enemy[i].y = spawnPos[i][1];
+        enemy[i].dx = 0;
+        enemy[i].dy = (i < 6) ? -enemy[i].speed : enemy[i].speed;
+        enemy[i].direction = (i < 6) ? NORTH : SOUTH;
+        enemy[i].sprite.setFramerange((i < 6) ? 0 : 2, (i < 6) ? 1 : 3);
+        enemy[i].frameCounter = 0;
+    }
+}
 bool gameOver(const Tank& player){
     // dieu kien cho xe dung sau nay
     return player.lives <= 0;

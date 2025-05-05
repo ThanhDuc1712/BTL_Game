@@ -29,6 +29,16 @@ struct Menu{
 extern GameFunc currentState;
 extern Menu gameMenu;
 
+struct GameoverScreen{
+    SDL_Texture* backgroundTexture;
+    Button returnButton;
+    void init(Graphics& gfx);
+    void render(Graphics& gfx);
+    void update(int mouseX, int mouseY);
+    bool handleClick(int mouseX, int mouseY);
+    void cleanup();
 
+};
+extern GameoverScreen GOverScreen;
 
 #endif // MENU_H

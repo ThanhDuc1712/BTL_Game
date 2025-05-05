@@ -54,6 +54,8 @@ void handleMouseEvents(SDL_Event &event, int mouseX, int mouseY) {
                         if(gameMenu.handleClick(mouseX, mouseY)){
                             currentState = PLAYING;
                         }
+                    }else if(currentState == GAME_OVER){
+                        GOverScreen.handleClick(mouseX, mouseY);
                     }
                     break;
                 case SDL_BUTTON_RIGHT:
@@ -64,6 +66,8 @@ void handleMouseEvents(SDL_Event &event, int mouseX, int mouseY) {
                 case SDL_MOUSEMOTION:
                     if(currentState == MENU){
                         gameMenu.update(mouseX, mouseY);
+                    }else if(currentState == GAME_OVER){
+                        GOverScreen.update(mouseX, mouseY);
                     } break;
     }
 }
