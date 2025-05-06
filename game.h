@@ -74,8 +74,9 @@ struct EnemyTank {
     Direction direction;
     bool alive;
     int frameCounter;
-
     int bulletIndex;
+    int respawnTimer;
+    int spawnIndex;
 };
 extern Tank player;
 const int enemyMax = 12;
@@ -91,13 +92,23 @@ bool checkvacham_tank(const SDL_Rect& a, const SDL_Rect& b);
 bool checkvacham_enemyOther(int id, int nextX, int nextY);
 bool checkvacham_tankOther(int nextX, int nextY);
 
-
-
-
 void checkBulletEnemyCollision(Bullet& bullet);
 void checkEnemyBulletPlayerCollision();
 void checkWaterCollision();
 void resetPlayerPosition();
+
+struct dk_Victory{
+    int x,y;
+    Sprite sprite;
+    bool playerTouched;
+    Uint32 touchTime;
+
+    void init(SDL_Texture* texture);
+    void update(const Tank& player);
+    void render(Graphics& gfx);
+    void reset();
+};
+extern dk_Victory dkVictory;
 
 struct LivesDisplay {
     SDL_Texture* texture;
@@ -107,8 +118,8 @@ struct LivesDisplay {
     void updateLives(int lives);
 };
 extern LivesDisplay livesDisplay;
-void handleTankHit();
 
+void handleTankHit();
 
 void resetGame();
 bool gameOver(const Tank& player);

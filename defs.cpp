@@ -21,9 +21,11 @@ const int MAP_WIDTH = 800;
 SDL_Rect camera = {0, 0, 800, 608};
 
 const int spawnPos[12][2] = {
-    {0,0}, {0,320}, {800,0}, {800,320},
-    {192,416}, {608,416}, {32,864}, {768,864},
-    {224,864}, {576,864}, {320, 288}, {480, 288}
+    {192, 224}, {576,224},
+    {0,352}, {768, 352},
+    {96,480}, {672, 480},
+    {32,800}, {192,800}, {576,800}, {736, 800},
+    {0,960}, {768,960}
 };
 
 
@@ -34,3 +36,17 @@ const int LIVE_CLIPS[][4] = {
     {0, 64, 96, 32}
 };
 const int LIVE_FRAMES = sizeof(LIVE_CLIPS)/sizeof(LIVE_CLIPS[0]);
+
+int playerScore = 0;
+const char* SCORE_FONT_FILE = "SigmarOne-Regular.ttf";
+TTF_Font* scoreFont = nullptr;
+
+const char* VICTORY_FILE = "VICTORY.png";
+const int VICTORY_CLIP[][4] = {
+    {0,0,160,64},
+    {160,0,160,64}
+};
+const int VICTORY_FRAMES = sizeof(VICTORY_CLIP)/sizeof(VICTORY_CLIP[0]);
+
+const char* VICTORY_MUSIC_FILE = "VICTORY_MUSIC.mp3";
+Mix_Music* victoryMusic = nullptr;

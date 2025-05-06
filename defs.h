@@ -26,6 +26,15 @@ extern const char* LIVE_SPRITE_FILE;
 extern const int LIVE_CLIPS[][4];
 extern const int LIVE_FRAMES;
 
+extern int playerScore;
+extern const char* SCORE_FONT_FILE;
+extern TTF_Font* scoreFont;
 
+extern const char* VICTORY_FILE;
+extern const int VICTORY_CLIP[][4];
+extern const int VICTORY_FRAMES;
+
+extern const char* VICTORY_MUSIC_FILE;
+extern Mix_Music* victoryMusic;
 
 #endif // _DEFS__H

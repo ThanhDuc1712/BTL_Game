@@ -15,6 +15,10 @@ void Graphics::init(){
 
         if(!IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG))
             logErrorAndExit("SDL_image error:", IMG_GetError());
+        if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+            logErrorAndExit("SDL_mixer error:", Mix_GetError());
+        if(TTF_Init() == -1)
+            logErrorAndExit("SDL_ttf error:", TTF_GetError());
 
         renderer = SDL_CreateRenderer(window, -1 , SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
         if(renderer == nullptr)
@@ -26,7 +30,7 @@ void Graphics::init(){
 
 void Graphics::prepareScene(SDL_Texture* background){
         SDL_Rect tang = camera;
-        SDL_RenderClear(renderer); //XOA NEU CAN KHONG THI BO
+        SDL_RenderClear(renderer);
         SDL_Rect dest = {0, 0, 800, 608};
         SDL_RenderCopy(renderer, background, &tang, &dest);
 }
@@ -58,7 +62,27 @@ void Graphics::render(int x, int y, const Sprite& sprite) {
         SDL_RenderCopy(renderer, sprite.texture, clip, &renderQuad);
 }
 
+SDL_Texture* Graphics::renderText(const string& text, TTF_Font* font, SDL_Color color) {
+    SDL_Surface* surface = TTF_RenderText_Solid(font, text.c_str(), color);
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_FreeSurface(surface);
+
+    return texture;
+}
+
+
 void Graphics::quit(){
+        if(victoryMusic != nullptr){
+            Mix_FreeMusic(victoryMusic);
+            victoryMusic = nullptr;
+        }
+        if(scoreFont != nullptr){
+            TTF_CloseFont(scoreFont);
+            scoreFont = nullptr;
+        }
+        Mix_CloseAudio();
+        Mix_Quit();
+        TTF_Quit();
         IMG_Quit();
         SDL_DestroyWindow(window);
         SDL_DestroyRenderer(renderer);

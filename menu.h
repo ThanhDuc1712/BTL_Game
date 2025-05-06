@@ -3,7 +3,7 @@
 
 #include "includes.h"
 
-enum GameFunc {MENU, PLAYING, GAME_OVER};
+enum GameFunc {MENU, PLAYING, GAME_OVER, VICTORY};
 
 struct Button{
     SDL_Rect rect;
@@ -40,5 +40,22 @@ struct GameoverScreen{
 
 };
 extern GameoverScreen GOverScreen;
+
+struct VictoryScreen {
+    SDL_Texture* backgroundTexture;
+    Button returnButton;
+    bool MusicPlaying;
+    void init(Graphics& gfx);
+    void render(Graphics& gfx);
+    void update(int mouseX, int mouseY);
+    bool handleClick(int mouseX, int mouseY);
+    void cleanup();
+
+    SDL_Texture* scoreTexture;
+    void updateScoreDisplay(Graphics& gfx);
+    void playVictoryMusic();
+    void stopVictoryMusic();
+};
+extern VictoryScreen victoryScreen;
 
 #endif // MENU_H

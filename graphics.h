@@ -27,6 +27,7 @@ struct Graphics {
     SDL_Texture *loadTexture(const char *filename);
     void renderTexture(SDL_Texture *texture, int x, int y);
     void render(int x, int y, const Sprite& sprite);
+    SDL_Texture* renderText(const std::string& text, TTF_Font* font, SDL_Color color);
 
     void renderTextureCamera(SDL_Texture* texture, int x, int y);
     void renderSpriteCamera(int x, int y, const Sprite& sprite);

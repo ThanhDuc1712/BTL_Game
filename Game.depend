@@ -4,28 +4,28 @@
 	<SDL.h>
 	<SDL_image.h>
 
-1746459830 source:c:\users\admin\documents\code blocks\game\main.cpp
+1746538936 source:c:\users\admin\documents\code blocks\game\main.cpp
 	"includes.h"
 	<direct.h>
 
-1746373496 c:\users\admin\documents\code blocks\game\defs.h
+1746534268 c:\users\admin\documents\code blocks\game\defs.h
 
-1744561041 c:\users\admin\documents\code blocks\game\graphics.h
+1746538036 c:\users\admin\documents\code blocks\game\graphics.h
 	"includes.h"
 
-1746206207 source:c:\users\admin\documents\code blocks\game\graphics.cpp
+1746538014 source:c:\users\admin\documents\code blocks\game\graphics.cpp
 	"includes.h"
 
-1746373835 source:c:\users\admin\documents\code blocks\game\defs.cpp
+1746534268 source:c:\users\admin\documents\code blocks\game\defs.cpp
 	"includes.h"
 
-1746426132 source:c:\users\admin\documents\code blocks\game\events.cpp
+1746510341 source:c:\users\admin\documents\code blocks\game\events.cpp
 	"includes.h"
 
 1746346284 c:\users\admin\documents\code blocks\game\events.h
 	"includes.h"
 
-1746297154 c:\users\admin\documents\code blocks\game\includes.h
+1746534268 c:\users\admin\documents\code blocks\game\includes.h
 	<iostream>
 	<vector>
 	<string>
@@ -33,6 +33,8 @@
 	<time.h>
 	<SDL.h>
 	<SDL_image.h>
+	<SDL_mixer.h>
+	<SDL_ttf.h>
 	<windows.h>
 	<fstream>
 	"defs.h"
@@ -41,15 +43,15 @@
 	"game.h"
 	"menu.h"
 
-1746459872 c:\users\admin\documents\code blocks\game\game.h
+1746536957 c:\users\admin\documents\code blocks\game\game.h
 	"includes.h"
 
-1746461408 source:c:\users\admin\documents\code blocks\game\game.cpp
+1746539036 source:c:\users\admin\documents\code blocks\game\game.cpp
 	"includes.h"
 
-1746424553 c:\users\admin\documents\code blocks\game\menu.h
+1746534268 c:\users\admin\documents\code blocks\game\menu.h
 	"includes.h"
 
-1746461408 source:c:\users\admin\documents\code blocks\game\menu.cpp
+1746539029 source:c:\users\admin\documents\code blocks\game\menu.cpp
 	"includes.h"
 

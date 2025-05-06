@@ -283,9 +283,34 @@ void idivEnemy(int index, int x, int y){
     enemy[index].dx = 0;
     enemy[index].dy = enemy[index].speed;
     enemy[index].bulletIndex = index;
+    enemy[index].respawnTimer = 0;
+    enemy[index].spawnIndex = index % 12;
+
 }
 
 void updateEnemy(){
+    for (int i = 0; i < enemyMax; ++i) {
+        if (!enemy[i].alive && enemy[i].respawnTimer > 0) {
+            enemy[i].respawnTimer--;
+            if (enemy[i].respawnTimer <= 0) {
+                enemy[i].alive = true;
+                enemy[i].x = spawnPos[enemy[i].spawnIndex][0];
+                enemy[i].y = spawnPos[enemy[i].spawnIndex][1];
+
+                if (enemy[i].spawnIndex < 6) {
+                    enemy[i].direction = NORTH;
+                    enemy[i].sprite.setFramerange(0, 1);
+                    enemy[i].dy = -enemy[i].speed;
+                    enemy[i].dx = 0;
+                } else {
+                    enemy[i].direction = SOUTH;
+                    enemy[i].sprite.setFramerange(2, 3);
+                    enemy[i].dy = enemy[i].speed;
+                    enemy[i].dx = 0;
+                }
+            }
+        }
+    }
     for (int i = 0; i < enemyMax; ++i) {
         if (!enemy[i].alive) continue;
 
@@ -399,6 +424,10 @@ bool checkvacham_tank(const SDL_Rect& a, const SDL_Rect& b){
 Tank player;
 bool checkvacham_enemyOther(int id, int nextX, int nextY) {
     SDL_Rect rectA = {nextX, nextY, 32, 32};
+
+    SDL_Rect dkRect = {dkVictory.x, dkVictory.y, 128,64};
+    if(SDL_HasIntersection(&rectA, &dkRect)) return true;
+
     for (int i = 0; i < enemyMax; i++) {
         if (i == id || !enemy[i].alive) continue;
         SDL_Rect rectB = {enemy[i].x, enemy[i].y, 32, 32};
@@ -424,11 +453,6 @@ bool checkvacham_tankOther(int nextX, int nextY){
 }
 
 
-
-
-
-
-
 void checkBulletEnemyCollision(Bullet& bullet) {
     if (!bullet.active) return;
 
@@ -440,6 +464,8 @@ void checkBulletEnemyCollision(Bullet& bullet) {
         SDL_Rect enemyRect = {enemy[i].x, enemy[i].y, 32, 32};
         if (SDL_HasIntersection(&bulletRect, &enemyRect)) {
             enemy[i].alive = false;
+            enemy[i].respawnTimer = 72;
+            playerScore += 10;
             bullet.reset();
             break;
         }
@@ -487,6 +513,52 @@ void resetPlayerPosition() {
 }
 
 
+dk_Victory dkVictory;
+void dk_Victory::init(SDL_Texture* texture){
+    x = 320;
+    y = 160;
+
+    sprite.texture = texture;
+    SDL_Rect clip;
+    for(int i = 0; i < VICTORY_FRAMES; i++){
+        clip.x = VICTORY_CLIP[i][0];
+        clip.y = VICTORY_CLIP[i][1];
+        clip.w = VICTORY_CLIP[i][2];
+        clip.h = VICTORY_CLIP[i][3];
+        sprite.clips.push_back(clip);
+    }
+    sprite.currentFrame = 0;
+
+    playerTouched = false;
+    touchTime = 0;
+}
+
+void dk_Victory::update(const Tank& player){
+    SDL_Rect playerRect = {player.x, player.y, 32, 32};
+    SDL_Rect dkRect = {x, y, 160, 64};
+
+    if(SDL_HasIntersection(&playerRect, &dkRect) && !playerTouched){
+        playerTouched = true;
+        sprite.currentFrame = 1;
+        touchTime = SDL_GetTicks();
+    }
+
+    if(playerTouched && (SDL_GetTicks() - touchTime > 2000)){
+        currentState = VICTORY;
+        victoryScreen.MusicPlaying = false;
+    }
+}
+
+void dk_Victory::render(Graphics& gfx){
+    gfx.renderSpriteCamera(x,y,sprite);
+}
+
+void dk_Victory::reset(){
+    sprite.currentFrame = 0;
+    playerTouched = false;
+    touchTime = 0;
+}
+
 
 LivesDisplay livesDisplay;
 void LivesDisplay::init(SDL_Texture* tex){
@@ -528,6 +600,9 @@ void handleTankHit(){
 
 
 void resetGame(){
+    playerScore = 0;
+    victoryScreen.stopVictoryMusic();
+
     player.lives = 3;
     player.immotank = false;
     player.immotankTimer = 0;
@@ -559,8 +634,10 @@ void resetGame(){
         enemy[i].sprite.setFramerange((i < 6) ? 0 : 2, (i < 6) ? 1 : 3);
         enemy[i].frameCounter = 0;
     }
+
+    dkVictory.reset();
 }
-bool gameOver(const Tank& player){
+//bool gameOver(const Tank& player){
     // dieu kien cho xe dung sau nay
-    return player.lives <= 0;
-}
+    //return player.lives <= 0;
+//}
