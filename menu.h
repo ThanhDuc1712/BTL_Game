@@ -18,12 +18,16 @@ struct Menu{
     Button startButton;
     SDL_Texture* backgroundTexture;
     SDL_Texture* titleTexture;
-
+    SDL_Texture* highScoreTexture;
     void init(Graphics& gfx);
     void render(Graphics& gfx);
     void update(int mouseX, int mouseY);
     bool handleClick(int mouseX, int mouseY);
+    void updateHighScoreDisplay(Graphics& gfx);
+    void loadHighScore();
+    void saveHighScore();
     void cleanup();
+
 };
 
 extern GameFunc currentState;
@@ -32,6 +36,7 @@ extern Menu gameMenu;
 struct GameoverScreen{
     SDL_Texture* backgroundTexture;
     Button returnButton;
+    Graphics* gfx;
     void init(Graphics& gfx);
     void render(Graphics& gfx);
     void update(int mouseX, int mouseY);
@@ -44,6 +49,7 @@ extern GameoverScreen GOverScreen;
 struct VictoryScreen {
     SDL_Texture* backgroundTexture;
     Button returnButton;
+    Graphics* gfx;
     bool MusicPlaying;
     void init(Graphics& gfx);
     void render(Graphics& gfx);
@@ -57,5 +63,6 @@ struct VictoryScreen {
     void stopVictoryMusic();
 };
 extern VictoryScreen victoryScreen;
+
 
 #endif // MENU_H

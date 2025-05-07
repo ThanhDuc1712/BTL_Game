@@ -38,6 +38,7 @@ const int LIVE_CLIPS[][4] = {
 const int LIVE_FRAMES = sizeof(LIVE_CLIPS)/sizeof(LIVE_CLIPS[0]);
 
 int playerScore = 0;
+int High_Score = 0;
 const char* SCORE_FONT_FILE = "SigmarOne-Regular.ttf";
 TTF_Font* scoreFont = nullptr;
 
@@ -50,3 +51,7 @@ const int VICTORY_FRAMES = sizeof(VICTORY_CLIP)/sizeof(VICTORY_CLIP[0]);
 
 const char* VICTORY_MUSIC_FILE = "VICTORY_MUSIC.mp3";
 Mix_Music* victoryMusic = nullptr;
+
+
+
+

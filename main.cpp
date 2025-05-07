@@ -19,6 +19,7 @@ int main(int argc, char* argv[]) {
     graphics.init();
 
     gameMenu.init(graphics);
+    gameMenu.loadHighScore();
     GOverScreen.init(graphics);
     victoryScreen.init(graphics);
     victoryScreen.MusicPlaying = false;
@@ -73,9 +74,9 @@ int main(int argc, char* argv[]) {
             dkVictory.render(graphics);
             graphics.renderSpriteCamera(player.x, player.y, player.sprite);
             bullet.render(graphics);
-            renderTileMap(graphics,true);
             renderEnemy(graphics);
             renderBullets(enemyBullets, MaxEnemy_bullet, graphics);
+            renderTileMap(graphics,true);
             livesDisplay.render(graphics);
         }
         else if (currentState == MENU) {

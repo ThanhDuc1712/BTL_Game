@@ -122,6 +122,6 @@ extern LivesDisplay livesDisplay;
 void handleTankHit();
 
 void resetGame();
-bool gameOver(const Tank& player);
+
 
 #endif // GAME_H

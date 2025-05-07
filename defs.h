@@ -37,4 +37,6 @@ extern const int VICTORY_FRAMES;
 extern const char* VICTORY_MUSIC_FILE;
 extern Mix_Music* victoryMusic;
 
+extern int High_Score;
+
 #endif // _DEFS__H

@@ -3,7 +3,7 @@
 Tank::Tank() : x(384), y(1184), dx(0), dy(0), speed(INITIAL_SPEED), lives(3), immotank(false), immotankTimer(0), direction(NORTH){
 
 camera.y = y - SCREEN_HEIGHT / 2 + 16;
-camera.y = std::max(0, std::min(camera.y, MAP_HEIGHT - SCREEN_HEIGHT));
+camera.y = max(0, min(camera.y, MAP_HEIGHT - SCREEN_HEIGHT));
 }
 
 int snapToGrid(int value, int tileSize, int differ = 6) {
@@ -135,7 +135,7 @@ int tileMap[MAP_ROWS][MAP_COLS];
 SDL_Rect brickClipMap[MAP_ROWS][MAP_COLS];
 
 bool loadTileMap(const char* filename){
-    std::ifstream file(filename);
+    ifstream file(filename);
     if(!file.is_open()){
         cerr << "failed to load map file: " << filename << endl;
         return false;
@@ -274,7 +274,7 @@ void idivEnemy(int index, int x, int y){
     enemy[index].y = y;
     enemy[index].dx = 0;
     enemy[index].dy = 0;
-    enemy[index].speed = 4;
+    enemy[index].speed = 5;
     enemy[index].direction = SOUTH;
     enemy[index].alive = true;
     enemy[index].frameCounter = 0;
@@ -311,7 +311,7 @@ void updateEnemy(){
             }
         }
     }
-    for (int i = 0; i < enemyMax; ++i) {
+    for (int i = 0; i < enemyMax; i++) {
         if (!enemy[i].alive) continue;
 
         EnemyTank& E = enemy[i];
@@ -509,7 +509,7 @@ void resetPlayerPosition() {
     player.immotank = true;
     player.immotankTimer = 120;
     camera.y = player.y - SCREEN_HEIGHT / 2 + 16;
-    camera.y = std::max(0, std::min(camera.y, MAP_HEIGHT - SCREEN_HEIGHT));
+    camera.y = max(0, min(camera.y, MAP_HEIGHT - SCREEN_HEIGHT));
 }
 
 
@@ -613,7 +613,7 @@ void resetGame(){
     player.setDirection(NORTH);
 
     camera.y = player.y - SCREEN_HEIGHT / 2 + 16;
-    camera.y = std::max(0, std::min(camera.y, MAP_HEIGHT - SCREEN_HEIGHT));
+    camera.y = max(0, min(camera.y, MAP_HEIGHT - SCREEN_HEIGHT));
     livesDisplay.updateLives(player.lives);
 
 
@@ -637,7 +637,4 @@ void resetGame(){
 
     dkVictory.reset();
 }
-//bool gameOver(const Tank& player){
-    // dieu kien cho xe dung sau nay
-    //return player.lives <= 0;
-//}
+
