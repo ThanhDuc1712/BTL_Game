@@ -124,4 +124,4 @@ void handleTankHit();
 void resetGame();
 
 
-#endif // GAME_H
+#endif

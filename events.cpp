@@ -49,7 +49,6 @@ void handleMouseEvents(SDL_Event &event, int mouseX, int mouseY) {
         case SDL_MOUSEBUTTONDOWN:
             switch (event.button.button) {
                 case SDL_BUTTON_LEFT:
-                    // Xử lý chọn menu
                     if(currentState == MENU){
                         if(gameMenu.handleClick(mouseX, mouseY)){
                             currentState = PLAYING;
@@ -61,7 +60,6 @@ void handleMouseEvents(SDL_Event &event, int mouseX, int mouseY) {
                     }
                     break;
                 case SDL_BUTTON_RIGHT:
-                    // Xử lý tùy chỉnh âm lượng
                     break;
             }
             break;

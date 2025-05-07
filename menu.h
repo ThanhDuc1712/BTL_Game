@@ -23,7 +23,6 @@ struct Menu{
     void render(Graphics& gfx);
     void update(int mouseX, int mouseY);
     bool handleClick(int mouseX, int mouseY);
-    void updateHighScoreDisplay(Graphics& gfx);
     void loadHighScore();
     void saveHighScore();
     void cleanup();
@@ -65,4 +64,4 @@ struct VictoryScreen {
 extern VictoryScreen victoryScreen;
 
 
-#endif // MENU_H
+#endif

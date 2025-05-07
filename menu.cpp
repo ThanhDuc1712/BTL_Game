@@ -12,7 +12,6 @@ void Menu::init(Graphics& gfx){
     backgroundTexture = gfx.loadTexture("TANK _1975.png");
 
     loadHighScore();
-    updateHighScoreDisplay(gfx);
     gameMenu.loadHighScore();
 
 
@@ -80,19 +79,6 @@ void Menu::saveHighScore() {
     }
 }
 
-void Menu::updateHighScoreDisplay(Graphics& gfx) {
-    if(highScoreTexture != nullptr) {
-        SDL_DestroyTexture(highScoreTexture);
-        highScoreTexture = nullptr;
-    }
-
-    if(scoreFont != nullptr) {
-        SDL_Color scoreColor = {0, 0, 0, 255};
-        string highScoreText = "HIGH SCORE: " + to_string(High_Score);
-        highScoreTexture = gfx.renderText(highScoreText, scoreFont, scoreColor);
-    }
-}
-
 
 void Menu::cleanup() {
     SDL_DestroyTexture(startButton.texture);
@@ -141,9 +127,7 @@ bool GameoverScreen::handleClick(int mouseX, int mouseY){
         if(playerScore > High_Score) {
            High_Score = playerScore;
            gameMenu.saveHighScore();
-           gameMenu.updateHighScoreDisplay(*gfx);
         }
-        gameMenu.updateHighScoreDisplay(*gfx);
         resetGame();
         currentState = MENU;
         return true;
@@ -205,7 +189,6 @@ bool VictoryScreen::handleClick(int mouseX, int mouseY){
         if(playerScore > High_Score) {
             High_Score = playerScore;
             gameMenu.saveHighScore();
-            gameMenu.updateHighScoreDisplay(*gfx);
         }
 
         stopVictoryMusic();

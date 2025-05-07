@@ -39,4 +39,4 @@ extern Mix_Music* victoryMusic;
 
 extern int High_Score;
 
-#endif // _DEFS__H
+#endif

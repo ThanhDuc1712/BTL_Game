@@ -507,7 +507,7 @@ void resetPlayerPosition() {
     player.dy = 0;
     player.setDirection(NORTH);
     player.immotank = true;
-    player.immotankTimer = 120;
+    player.immotankTimer = 1200;
     camera.y = player.y - SCREEN_HEIGHT / 2 + 16;
     camera.y = max(0, min(camera.y, MAP_HEIGHT - SCREEN_HEIGHT));
 }

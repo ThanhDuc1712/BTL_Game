@@ -14,4 +14,4 @@ void handleEvents(SDL_Event &event, bool &running, Tank &player, Bullet& bullet,
 
 
 
-#endif // EVENTS_H
+#endif
