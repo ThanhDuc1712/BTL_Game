@@ -3,6 +3,7 @@
 
 const int SCREEN_WIDTH = 928;
 const int SCREEN_HEIGHT = 608;
+
 const int INITIAL_SPEED = 4;
 extern const char* WINDOW_TITLE;
 extern const char* TANK_SPRITE_FILE;
@@ -33,6 +34,7 @@ extern TTF_Font* scoreFont;
 extern const char* VICTORY_FILE;
 extern const int VICTORY_CLIP[][4];
 extern const int VICTORY_FRAMES;
+extern const char* DKVICTORY_SPRITE_FILE;
 
 extern const char* VICTORY_MUSIC_FILE;
 extern Mix_Music* victoryMusic;

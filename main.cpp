@@ -31,7 +31,7 @@ int main(int argc, char* argv[]) {
     bulletTexture = graphics.loadTexture("Bullet.png");
     bulletTexture1 = graphics.loadTexture("Bullet1.png");
     SDL_Texture* enemyTexture = graphics.loadTexture(ENEMY_SPRITE_FILE);
-    SDL_Texture* congTexture = graphics.loadTexture("Cong.png");
+    SDL_Texture* congTexture = graphics.loadTexture(DKVICTORY_SPRITE_FILE);
 
     for (int i = 0; i < enemyMax; ++i) {
         idivEnemy(i, spawnPos[i][0], spawnPos[i][1]);

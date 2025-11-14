@@ -6,7 +6,7 @@ camera.y = y - SCREEN_HEIGHT / 2 + 16;
 camera.y = max(0, min(camera.y, MAP_HEIGHT - SCREEN_HEIGHT));
 }
 
-int snapToGrid(int value, int tileSize, int differ = 6) {
+int snapToGrid(int value, int tileSize, int differ = 7) {
     int mod = value % tileSize;
     if (mod < differ) return value - mod;
     if (mod > tileSize - differ) return value + (tileSize - mod);
@@ -43,7 +43,6 @@ void Tank::move(){
             sprite.currentFrame = sprite.startFrame;
         }
 
-        checkWaterCollision();
     }else{
         stop();
     }
@@ -487,18 +486,6 @@ void checkEnemyBulletPlayerCollision() {
     }
 }
 
-void checkWaterCollision(){
-    if(player.immotank) return;
-    int tankX = player.x + 16;
-    int tankY = player.y + 16;
-    int col = tankX/TILE_SIZE;
-    int row = tankY/TILE_SIZE;
-    if(row >= 0 && row < MAP_ROWS && col >= 0 && col < MAP_COLS){
-        if(tileMap[row][col] == WATER){
-            handleTankHit();
-        }
-    }
-}
 
 void resetPlayerPosition() {
     player.x = 384;
@@ -507,7 +494,7 @@ void resetPlayerPosition() {
     player.dy = 0;
     player.setDirection(NORTH);
     player.immotank = true;
-    player.immotankTimer = 1200;
+    player.immotankTimer = 120;
     camera.y = player.y - SCREEN_HEIGHT / 2 + 16;
     camera.y = max(0, min(camera.y, MAP_HEIGHT - SCREEN_HEIGHT));
 }
@@ -604,8 +591,8 @@ void resetGame(){
     victoryScreen.stopVictoryMusic();
 
     player.lives = 3;
-    player.immotank = false;
-    player.immotankTimer = 0;
+    player.immotank = true;
+    player.immotankTimer = 99999999999;
     player.x = 384;
     player.y = 1184;
     player.dx = 0;

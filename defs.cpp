@@ -43,6 +43,7 @@ const char* SCORE_FONT_FILE = "SigmarOne-Regular.ttf";
 TTF_Font* scoreFont = nullptr;
 
 const char* VICTORY_FILE = "VICTORY.png";
+const char* DKVICTORY_SPRITE_FILE =  "Cong.png";
 const int VICTORY_CLIP[][4] = {
     {0,0,160,64},
     {160,0,160,64}
